@@ -50,10 +50,6 @@ RUN sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/var\/www\/html\/publi
 
 WORKDIR /var/www/html
 
-RUN chown -R www-data:www-data /var/www/html
-
-USER www-data
-
 EXPOSE 80
 
 CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
