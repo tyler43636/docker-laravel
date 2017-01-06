@@ -10,19 +10,20 @@ ENV APACHE_LOCK_DIR /var/lock/apache2
 RUN locale-gen en_US.UTF-8 \
 	&& export LANG=en_US.UTF-8 \
 	&& apt-get update \
-	&& apt-get install -y software-properties-common curl apt-transport-https \
+	&& apt-get install -y --no-install-recommends \
+		curl \
+		software-properties-common \
+		apt-transport-https \
 	&& LC_ALL=en_US.UTF-8 add-apt-repository -y ppa:ondrej/php \
 	&& curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
 	&& curl -O https://deb.nodesource.com/setup_7.x \
 	&& bash setup_7.x \
-	&& apt-get -y install \
+	&& rm -rf setup_7.x \
+	&& apt-get -y install --no-install-recommends \
 		nodejs \
 		yarn \
 		apache2 \
-		vim \
-		git-core \
-		build-essential \
 		php7.1 \
 		php7.1-cli \
 		php7.1-mbstring \
@@ -38,12 +39,18 @@ RUN locale-gen en_US.UTF-8 \
 	&& php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
 	&& php -r "unlink('composer-setup.php');" \
 	&& a2enmod headers \
-	&& a2enmod rewrite
+	&& a2enmod rewrite \
+	&& apt-get remove -y \
+		software-properties-common \
+		apt-transport-https \
+	&& apt-get autoremove -y \
+	&& rm -rf /var/lib/apt/lists/*
 
-RUN ln -sf /dev/stdout /var/log/apache2/access.log && \
-ln -sf /dev/stderr /var/log/apache2/error.log
 
-RUN mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR
+RUN mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR \
+	&& ln -sf /dev/stdout /var/log/apache2/access.log \
+	&& ln -sf /dev/stderr /var/log/apache2/error.log \
+	&& sed -i 's/;error_log = syslog/error_log = \/dev\/stderr/' /etc/php/7.1/apache2/php.ini
 
 RUN sed -i ':a;N;$!ba;s/AllowOverride None/AllowOverride All/3' /etc/apache2/apache2.conf
 RUN sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/var\/www\/html\/public/' /etc/apache2/sites-enabled/000-default.conf
