@@ -17,7 +17,7 @@ RUN locale-gen en_US.UTF-8 \
 	&& LC_ALL=en_US.UTF-8 add-apt-repository -y ppa:ondrej/php \
 	&& curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
-	&& curl -O https://deb.nodesource.com/setup_7.x \
+	&& curl -O https://deb.nodesource.com/setup_8.x \
 	&& bash setup_7.x \
 	&& rm -rf setup_7.x \
 	&& apt-get -y install --no-install-recommends \
