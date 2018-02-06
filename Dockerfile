@@ -18,23 +18,23 @@ RUN locale-gen en_US.UTF-8 \
 	&& curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
 	&& echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
 	&& curl -O https://deb.nodesource.com/setup_8.x \
-	&& bash setup_7.x \
-	&& rm -rf setup_7.x \
+	&& bash setup_8.x \
+	&& rm -rf setup_8.x \
 	&& apt-get -y install --no-install-recommends \
 		nodejs \
 		yarn \
 		apache2 \
-		php7.1 \
-		php7.1-cli \
-		php7.1-mbstring \
-		php7.1-mysql \
-		php7.1-gd \
-		php7.1-json \
-		php7.1-curl \
-		php7.1-sqlite3 \
-		php7.1-intl \
-		php7.1-xml \
-		php7.1-zip \
+		php7.2 \
+		php7.2-cli \
+		php7.2-mbstring \
+		php7.2-mysql \
+		php7.2-gd \
+		php7.2-json \
+		php7.2-curl \
+		php7.2-sqlite3 \
+		php7.2-intl \
+		php7.2-xml \
+		php7.2-zip \
 	&& php -r "readfile('https://getcomposer.org/installer');" > composer-setup.php \
 	&& php composer-setup.php --install-dir=/usr/local/bin --filename=composer \
 	&& php -r "unlink('composer-setup.php');" \
@@ -50,7 +50,7 @@ RUN locale-gen en_US.UTF-8 \
 RUN mkdir -p $APACHE_RUN_DIR $APACHE_LOCK_DIR $APACHE_LOG_DIR \
 	&& ln -sf /dev/stdout /var/log/apache2/access.log \
 	&& ln -sf /dev/stderr /var/log/apache2/error.log \
-	&& sed -i 's/;error_log = syslog/error_log = \/dev\/stderr/' /etc/php/7.1/apache2/php.ini
+	&& sed -i 's/;error_log = syslog/error_log = \/dev\/stderr/' /etc/php/7.2/apache2/php.ini
 
 RUN sed -i ':a;N;$!ba;s/AllowOverride None/AllowOverride All/3' /etc/apache2/apache2.conf
 RUN sed -i 's/DocumentRoot \/var\/www\/html/DocumentRoot \/var\/www\/html\/public/' /etc/apache2/sites-enabled/000-default.conf
