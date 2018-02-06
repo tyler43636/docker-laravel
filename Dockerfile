@@ -7,9 +7,10 @@ ENV APACHE_PID_FILE /var/run/apache2.pid
 ENV APACHE_RUN_DIR /var/run/apache2
 ENV APACHE_LOCK_DIR /var/lock/apache2
 
-RUN locale-gen en_US.UTF-8 \
+RUN apt-get update \
+    && apt-get install -y locales \
+    && locale-gen en_US.UTF-8 \
 	&& export LANG=en_US.UTF-8 \
-	&& apt-get update \
 	&& apt-get install -y --no-install-recommends \
 		curl \
 		software-properties-common \
